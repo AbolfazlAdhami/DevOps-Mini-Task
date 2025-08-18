@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-# === Varibles ===
+# === Variables ===
 USERNAME="abolfazl"
 PACKAGE_KEYWORD="bottleneck"
 
