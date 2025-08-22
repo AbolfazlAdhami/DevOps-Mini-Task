@@ -1,0 +1,14 @@
+#    Task 1: File System Navigation
+
+### Navigate to the /tmp directory.
+### Create a new directory named first_quiz.
+### Inside first_quiz, create an empty file named test1.txt.
+### Verify the file was created using the appropriate command.
+
+``` bash
+cd /tmp 
+mkdir first_quiz
+cd first_quiz
+touch test1.txt
+ls -l
+```

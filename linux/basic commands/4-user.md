@@ -1,14 +1,18 @@
 # Create user with home directory and can be privilege (be sudo) and search soem service and install it
 
+```bash
 # Create a user with home directory
 sudo useradd -m -s /bin/bash abolfazl
 passwd ******
 
 # Give the user sudo privileges 
+ 
 sudo usermod -aG sudo abolfazl
 groups abolfazl
-
+ 
 # Search and Install for a service 
+
+ 
 apt search challenge
 apt search bottleneck
 
@@ -16,5 +20,5 @@ apt search bottleneck
 sudo apt install bottleneck
 sudo apt install htop
 
-
+```
 
