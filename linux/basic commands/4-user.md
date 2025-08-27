@@ -1,4 +1,4 @@
-# Create user with home directory and can be privilege (be sudo) and search soem service and install it
+# Create user with home directory and can be privilege (be sudo) and search some service and install it
 
 ```bash
 # Create a user with home directory
