@@ -1,29 +1,50 @@
 #!/bin/bash
 
-# Student Grades Management + Simple Calculator (Bash version)
+# Enable associative arrays (bash 4+)
+declare -A students
+declare -A evaluations
 
+# Function to calculate average
+calculate_average() {
+    local sum=0
+    local count=0
+    for grade in "${students[@]}"; do
+        ((sum+=grade))
+        ((count++))
+    done
+    echo "scale=2; $sum / $count" | bc
+}
 
+# Input for 3 students
+for i in {1..3}
+do
+    echo -n "Enter name of student $i: "
+    read name
+    echo -n "Enter grade of $name: "
+    read grade
 
-# --- Part 1: Student Grades Management ---
-declare A students
-grades=()
+    students[$name]=$grade
 
-for i in {1..3}; do
-        read -p "Enter the name of student $i:" name
-        read  -p "Ender the grade of $name" grade
-        student["$name"]=$grades
-        grades+=($grade)
+    # Evaluation
+    if [ $grade -ge 17 ]; then
+        evaluations[$name]="Excellent"
+    elif [ $grade -ge 12 ]; then
+        evaluations[$name]="Good"
+    else
+        evaluations[$name]="Needs more effort"
+    fi
 done
 
+# Display results
+echo -e "\n--- Student Grades Report ---"
+printf "%-15s %-10s %-20s\n" "Name" "Grade" "Evaluation"
+echo "-----------------------------------------------------"
 
-# Calculate average
-sum=0
-for g in "${grades[@]}"; do
-        sum=$(echo "$sum + $g"| bc)
+for name in "${!students[@]}"
+do
+    printf "%-15s %-10s %-20s\n" "$name" "${students[$name]}" "${evaluations[$name]}"
 done
-average=$(echo "scale=2; $sum / ${#grades[@]}" | bc)
 
-
-echo -e "\n--- Student Report ---"
-for name in "${!students[@]}"; do 
-        grades=${students["$name"]}
+# Average
+avg=$(calculate_average)
+echo -e "\nAverage Grade: $avg"
