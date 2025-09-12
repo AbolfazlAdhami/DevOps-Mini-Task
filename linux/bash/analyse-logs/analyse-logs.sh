@@ -26,7 +26,7 @@ for LOG_FILE in $LOG_FILES; do
         ERROR_COUNT=$(grep -c "$PATTERN" "$LOG_FILE")
         echo "Total Error Count: $ERROR_COUNT" >> "$REPORT_FILE"
         if [ "$ERROR_COUNT" -gt 10 ]; then
-            echo " Action Required: too many $PATTERN errors in log file $LOG_FILE" >> $REPORT_FILE
+            echo " Action Required: too many $PATTERN issues in log file $LOG_FILE" >> $REPORT_FILE
         fi 
     done
 done
