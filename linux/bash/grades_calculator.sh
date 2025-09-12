@@ -1,5 +1,10 @@
 #!/bin/bash
 
+: << END_COMMENT
+Build a Simple Calculator
+ Write a Python program that simulates a simple calculator. The program should: Ask the user to enter two numbers. Ask the user to enter an operation (+, -, *, %). Perform the operation on the two numbers and display the result. If the user enters an invalid operation, print an error message. in bash script
+END_COMMENT
+
 # Enable associative arrays (bash 4+)
 declare -A students
 declare -A evaluations
