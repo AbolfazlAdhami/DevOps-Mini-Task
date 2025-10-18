@@ -1,0 +1,8 @@
+---- Checking connectivity ----
+Sat Oct 18 09:39:10 PM +0330 2025
+[SUCCESS] google.com reachable, avg latency: 73.707 ms
+--------------------------------------
+---- Checking connectivity ----
+Sat Oct 18 09:39:28 PM +0330 2025
+[SUCCESS] digikala.com reachable, avg latency: 34.203 ms
+--------------------------------------
