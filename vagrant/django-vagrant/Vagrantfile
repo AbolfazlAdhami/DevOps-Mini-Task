@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.hostname = "django-dev"
+
+  # Shared folder
+  config.vm.synced_folder ".", "/vagrant"
+
+  # Ports
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
+  config.vm.network "forwarded_port", guest: 3306, host: 3307
+
+  # Provider
+  config.vm.provider "virtualbox" do |vm|
+    vm.cpus = 2
+    vm.memory = 2048
+    vm.gui = false
+    vm.linked_clone = true
+  end
+
+  # Use external shell script for provisioning
+  config.vm.provision "shell", path: "bootstrap.sh"
+end
