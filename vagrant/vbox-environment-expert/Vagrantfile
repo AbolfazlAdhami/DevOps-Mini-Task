@@ -1,0 +1,47 @@
+# Vagrantfile
+Vagrant.configure("2") do |config|
+  # Define constants for box images
+  IMAGE_UBUNTU_2204 = "bento/ubuntu-22.04"
+  IMAGE_DEBIAN_12 = "bento/debian-12"
+
+  # VM 1: Ubuntu 22.04 with Python, Vim, Git, Nginx
+  config.vm.define "ubuntu_vm" do |ubuntu|
+    ubuntu.vm.box = IMAGE_UBUNTU_2204
+    ubuntu.vm.hostname = "ubuntu-vm"
+    
+    # Network configuration: Private network with static IP
+    ubuntu.vm.network "private_network", ip: "192.168.56.10"
+    
+    # Provider-specific configuration (VirtualBox)
+    ubuntu.vm.provider "virtualbox" do |vb|
+      vb.name = "Ubuntu_22_04_VM"
+      vb.memory = 1024  # 1GB RAM
+      vb.cpus = 1       # 1 CPU core
+    end
+    
+    # Provisioning with bootstrap script
+    ubuntu.vm.provision "shell", path: "bootstrap_vm1.sh"
+  end
+
+
+
+# VM 2: Debian 12 with Node.js, Git, Vim
+  config.vm.define "debian_vm" do |debian|
+    debian.vm.box = IMAGE_DEBIAN_12
+    debian.vm.hostname = "debian-vm"
+    
+    # Network configuration: Private network with a different static IP
+    debian.vm.network "private_network", ip: "192.168.56.11"
+    
+    # Provider-specific configuration (VirtualBox)
+      debian.vm.provider "virtualbox" do |vb|
+      vb.name = "Debian_12_VM"
+      vb.memory = 2048  # 2GB RAM
+      vb.cpus = 2       # 2 CPU cores
+    end
+    
+    # Provisioning with bootstrap script
+    debian.vm.provision "shell", path: "bootstrap_vm2.sh"
+  end
+
+end
