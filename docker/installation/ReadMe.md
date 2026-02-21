@@ -8,7 +8,7 @@ apt install -y wget git vim bash-completion curl htop net-tools dnsutils \
                ca-certificates curl gnupg lsb-release apt-transport-https gpg
 ```
 
-##### get gpg key and add docker repositroy:
+##### get gpg key and add docker repository:
 
 Add Docker’s official GPG key:
 
