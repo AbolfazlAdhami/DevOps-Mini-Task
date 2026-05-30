@@ -9,10 +9,32 @@
 **/terraform.tfstate
 **/terraform.tfstate.backup
 
-.DS_Store
-
-
-
-.venv
-.DS_Store
+.terraform/
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.ansible/tmp/
+*.retry
+.helm/cache/
 .vscode/
+.idea/
+.venv
+
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# (optional) virtual environments
+.venv/
+venv/
+env/
+
