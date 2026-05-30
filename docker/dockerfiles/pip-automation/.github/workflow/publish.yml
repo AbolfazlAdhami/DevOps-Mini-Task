@@ -1,0 +1,30 @@
+name: Build & Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "patch | minor | major (leave empty to skip)"
+        required: false
+        default: ""
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Build & Publish
+        env:
+          BUMP: ${{ github.event.inputs.bump }}
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+          REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
+        run: |
+          chmod +x build.sh
+          ./build.sh
