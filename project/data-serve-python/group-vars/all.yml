@@ -1,0 +1,9 @@
+---
+project_name: "data-serve-mesh"
+base_dir: "/opt/{{ project_name }}"
+data_dir: "{{ base_dir }}/data"
+config_dir: "{{ base_dir }}/config"
+
+# 
+domain_name: "abolfazltest12.ir"  
+server_port: 3000

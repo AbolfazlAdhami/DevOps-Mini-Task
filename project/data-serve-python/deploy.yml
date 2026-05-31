@@ -1,0 +1,71 @@
+---
+- name: Deploy Structured Data Serve Mesh using Docker and Nginx
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: 1. Create structural directories on host machine
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ base_dir }}"
+        - "{{ data_dir }}"
+        - "{{ config_dir }}"
+
+    - name: 2. Create a placeholder file if data directory is empty
+      copy:
+        content: "<h1>Data Mesh Active</h1><p>Place your directory contents inside {{ data_dir }} on the host.</p>"
+        dest: "{{ data_dir }}/index.html"
+        force: yes
+
+    - name: 3. Render and deploy Dockerfile from Jinja2 template
+      template:
+        src: templates/Dockerfile.j2
+        dest: "{{ base_dir }}/Dockerfile"
+        mode: "0644"
+
+    - name: 4. Render and deploy Nginx Configuration from Jinja2 template
+      template:
+        src: templates/nginx.conf.j2
+        dest: "{{ config_dir }}/nginx.conf"
+        mode: "0644"
+
+    - name: 5. Establish an isolated Docker Network for containers
+      docker_network:
+        name: data_mesh_network
+        state: present
+
+    - name: 6. Build the custom Python Server Docker Image
+      docker_image:
+        name: "local/{{ project_name }}-backend"
+        build:
+          path: "{{ base_dir }}"
+        source: build
+        state: present
+        force_source: yes
+
+    - name: 7. Spin up Python Service Container with Volume Mapping
+      docker_container:
+        name: python_app
+        image: "local/{{ project_name }}-backend"
+        state: started
+        restart_policy: always
+        networks:
+          - name: data_mesh_network
+        volumes:
+          - "{{ data_dir }}:/data:rw"
+
+    - name: 8. Spin up Nginx Proxy Container serving port 80
+      docker_container:
+        name: nginx_proxy
+        image: nginx:alpine
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"
+        networks:
+          - name: data_mesh_network
+        volumes:
+          - "{{ config_dir }}/nginx.conf:/etc/nginx/conf.d/default.conf:ro"
