@@ -1,0 +1,99 @@
+---
+- name: Automate Linux Scenarios & Server Hardening
+  hosts: all
+  become: true
+  tasks:
+    # -------------------------------------------------------------
+    # Scenario 1: Non-Interactive Service Account
+    # -------------------------------------------------------------
+    - name: Create deploy_bot user with non-interactive shell
+      ansible.builtin.user:
+        name: deploy_bot
+        shell: /usr/sbin/nologin
+        state: present
+        comment: "Automated Deployment Service Account"
+
+    # -------------------------------------------------------------
+    # Scenario 2: Time-Limited Temporary Account
+    # -------------------------------------------------------------
+    - name: Create temp_auditor user with expiration date
+      ansible.builtin.user:
+        name: temp_auditor
+        expires: 1798675200 # Epoch timestamp for 2026-12-31
+        state: present
+        comment: "Temporary Audit Account"
+
+    # -------------------------------------------------------------
+    # Scenario 3: Hardening SSH (Disable Direct Root Login)
+    # -------------------------------------------------------------
+    - name: Disable direct SSH login for root
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PermitRootLogin"
+        line: "PermitRootLogin no"
+        state: present
+        validate: "/usr/sbin/sshd -t -f %s"
+      notify: Restart SSH
+
+    # -------------------------------------------------------------
+    # Scenario 4: Executable Script Creation & Execution
+    # -------------------------------------------------------------
+    - name: Create sample backup script directory
+      ansible.builtin.file:
+        path: /home/vagrant/scripts
+        state: directory
+        owner: vagrant
+        group: vagrant
+        mode: "0755"
+
+    - name: Generate automated backup script
+      ansible.builtin.copy:
+        dest: /home/vagrant/scripts/daily_backup.sh
+        content: |
+          #!/bin/bash
+          echo "Automated system backup running at $(date)" >> /var/log/backup_execution.log
+        owner: vagrant
+        group: vagrant
+        mode: "0755" # Make executable (+x)
+
+    # -------------------------------------------------------------
+    # Scenario 5: Security & Access Control Baseline
+    # -------------------------------------------------------------
+    - name: Ensure AppArmor MAC service is active (Ubuntu Default)
+      ansible.builtin.systemd:
+        name: apparmor
+        state: started
+        enabled: true
+
+    # -------------------------------------------------------------
+    # Scenario 6: Task Automation via Cron
+    # -------------------------------------------------------------
+    - name: Schedule daily backup cron job at midnight
+      ansible.builtin.cron:
+        name: "Run daily system backup"
+        user: vagrant
+        minute: "0"
+        hour: "0"
+        job: "/home/vagrant/scripts/daily_backup.sh >> /var/log/cron_output.log 2>&1"
+
+    # -------------------------------------------------------------
+    # Scenario 7: SSH Public Key Injection for Passwordless Auth
+    # -------------------------------------------------------------
+    - name: Generate SSH key pair for vagrant user
+      ansible.builtin.user:
+        name: vagrant
+        generate_ssh_key: true
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+
+    - name: Ensure self-authorized access for key testing
+      ansible.builtin.authorized_key:
+        user: vagrant
+        key: "{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}"
+        state: present
+
+  handlers:
+    - name: Restart SSH
+      ansible.builtin.service:
+        name: ssh
+        state: restarted

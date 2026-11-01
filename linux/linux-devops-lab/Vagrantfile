@@ -1,0 +1,21 @@
+# Vagrantfile
+Vagrant.configure("2") do |config|
+  # Base image: Ubuntu 22.04 LTS
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.hostname = "nautilus-lab"
+
+  # Forward ports for testing SSH
+  config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
+
+  # Allocate VM resources
+  config.vm.provider "utm" do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
+
+  # Automate provisioning using Ansible
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "setup_lab.yml"
+    ansible.verbose  = "v"
+  end
+end
