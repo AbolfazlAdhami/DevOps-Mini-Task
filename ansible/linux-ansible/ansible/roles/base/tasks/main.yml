@@ -1,0 +1,38 @@
+---
+- name: Refresh apt package index
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install basic administration tools
+  ansible.builtin.apt:
+    name:
+      - sudo
+      - openssh-server
+      - cron
+      - vim
+      - less
+      - curl
+      - ca-certificates
+      - acl
+    state: present
+
+- name: Ensure SSH service is enabled and running
+  ansible.builtin.service:
+    name: ssh
+    state: started
+    enabled: true
+
+- name: Ensure cron service is enabled and running
+  ansible.builtin.service:
+    name: cron
+    state: started
+    enabled: true
+
+- name: Create lab workspace
+  ansible.builtin.file:
+    path: /opt/linux-lab
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"

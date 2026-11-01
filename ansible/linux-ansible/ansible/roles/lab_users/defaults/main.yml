@@ -1,0 +1,17 @@
+---
+# Training accounts intentionally have no passwords configured.
+# Use Vagrant SSH for administration; add password exercises separately.
+lab_interactive_users:
+  - tony
+  - steve
+  - banner
+  - loki
+  - peter
+  - natasha
+  - clint
+  - groot
+  - thor
+  - jenkins
+
+lab_service_users:
+  - deploy_bot

@@ -1,0 +1,19 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/debian-12"
+  config.vm.box_version = "202510.26.0"
+  config.vm.hostname = "lab01"
+
+  # Start with NAT networking. Add a private network after the VM boots reliably.
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "linux-devops-lab01"
+    vb.cpus = 1
+    vb.memory = 1536
+  end
+
+  # Ansible runs on the Mac host and connects to the guest over Vagrant SSH.
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/playbooks/site.yml"
+    ansible.become = true
+    ansible.verbose = "v"
+  end
+end

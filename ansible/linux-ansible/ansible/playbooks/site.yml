@@ -1,0 +1,7 @@
+---
+- name: Configure the Linux DevOps training VM
+  hosts: all
+  become: true
+  roles:
+    - base
+    - lab_users

@@ -1,0 +1,25 @@
+---
+- name: Create interactive training users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: present
+    create_home: true
+    shell: /bin/bash
+  loop: "{{ lab_interactive_users }}"
+
+- name: Create non-interactive service accounts
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: present
+    system: true
+    create_home: true
+    shell: /usr/sbin/nologin
+  loop: "{{ lab_service_users }}"
+
+- name: Create a temporary auditor account with an expiry date
+  ansible.builtin.user:
+    name: temp_auditor
+    state: present
+    create_home: true
+    shell: /bin/bash
+    expires: 1830211200
